@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html  xmlns:th="http://www.thymeleaf.org"
+	   xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	   layout:decorate="template1" >
+<head>
+<meta charset="UTF-8">
+<title>Patients</title>
+
+</head>
+<body>
+ <div layout:fragment="content1">
+	<div class="container mt-3">	
+		<div class="card">
+			<div class="card-header">Liste des patients</div>
+			<div class="card-body">
+				<form method="get" th:action="@{index}">
+					<label>Mot Clé :</label>
+					<input type="text" name="keyword" th:value="${keyword}"/>
+					<button type="submit" class="btn btn-success">Chercher</button>
+				</form>
+			
+				<table class="table">	
+					<thead>
+						<tr>
+							<th>ID</th><th>Nom</th><th>Date</th><th>Malade</th><th>Score</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="p:${ listPatients }">
+							<td th:text="${p.getId()}" />
+							<td th:text= "${p.nom}" />
+							<td th:text= "${p.dateNaissance}" />
+							<td th:text= "${p.malade}" />
+							<td th:text= "${p.score}" />
+							<td>
+								<a onclick="return confirm('Etes vous sur ?')"
+									class="btn btn-danger" 
+									th:href="@{delete(id=${p.id},
+											keyword=${keyword},
+											page=${cuurentPage})}"
+									>Delete</a>
+							</td>
+							<td>
+								<a  class="btn btn-success" 
+									th:href="@{editPatient(id=${p.id},
+											keyword=${keyword},
+											page=${cuurentPage})}"									
+									>Edit</a>
+							</td>
+						</tr>			
+					</tbody>
+				</table>			
+			</div>
+		</div>	
+		<div>
+			<ul class="nav nav-pills">
+		   <!-- status <= permet d'avoir des informations sur le tableau !
+				status est un tableau ou on a les infos :
+					{index = 0, count = 1, size = 9, current = 0}
+					{index = 1, count = 2, size = 9, current = 0}
+					{index = 2, count = 3, size = 9, current = 0}
+					{index = 3, count = 4, size = 9, current = 0}
+					{index = 4, count = 5, size = 9, current = 0}
+					{index = 5, count = 6, size = 9, current = 0}
+					{index = 6, count = 7, size = 9, current = 0}
+					{index = 7, count = 8, size = 9, current = 0}
+					{index = 8, count = 9, size = 9, current = 0} -->
+				<li th:each="page, status:${pages}" class="mt-2	" >
+					<a th:text="${status.index}" 
+						th:class="${status.index==cuurentPage?'btn btn-primary ms-2 ':'btn btn-outline-primary ms-2'}"
+						th:href="@{index(page=${status.index},keyword=${keyword})}"
+						></a>
+				</li>
+			</ul>
+		</div>
+	</div>	
+  </div>
+</body>	
+</html>
